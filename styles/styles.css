@@ -1,0 +1,16 @@
+body {
+  font-family: 'Hind', sans-serif;
+}
+.a11yze {
+  position: relative;
+}
+.a11yze-controls {
+  position: absolute;
+  width: 100%;
+  background-color: #000;
+  color: #fff;
+  margin-top: -15px;
+}
+.a11yze-controls .control {
+  display: inline-block;
+}

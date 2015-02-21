@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>A11yze Player by schne324</title>
+    <link type="text/css" rel="stylesheet" href="styles/styles.css">
+    <link type="text/css" rel="stylesheet" href="styles/skins/default.css">
+    <link href="http://fonts.googleapis.com/css?family=Hind:400,700" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.3.0/css/font-awesome.min.css">
+    <script src="http://cdnjs.cloudflare.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+  </head>
+  <body>
+    <h1>A11yze Player</h1>
+    <h2>stuff and such</h2>
+    <div id="demos">
+      <div class="vid-cage">
+        <video id="demo-1" src="assets/video/oceans.mp4" preload="none" poster="assets/img/poster.jpg">
+          <source src="assets/video/oceans.mp4" type="video/mp4">
+          <source src="assets/video/oceans.mp4" type="video/webm">
+          <track kind="captions" src="assets/captions/vtt/english.vtt" srclang="en" label="English"></track>
+        </video>
+      </div>
+    </div>
+    <script src="scripts/jquery.a11yze.js"></script>
+    <script>$('#demo-1').a11yze();</script>
+  </body>
+</html>
