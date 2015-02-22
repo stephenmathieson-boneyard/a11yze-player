@@ -9,7 +9,8 @@
  * @see  https://github.com/schne324/a11yze-player
  */
 
-var A11yze = function (video, options) {
+var init = function (video, options) {
+  console.log('options: ', options);
   var $player = {};
   // wrap the video
   // based on user's skin option, class will be appended to this div
@@ -69,8 +70,80 @@ var A11yze = function (video, options) {
     fullscreen: $fullscreen
   };
   $player.captions = $player.self.find('track');
+  console.log(options.captions);
+  if (!options.captions) {
+    $player.captions.hide();
+  } else {
+    var capName = rndid();
+    // build the captions dropdown
+    $player.controls
+      .caption
+      .append('<div id="fly-' + capName + '" class="captions-menu">'
+              +   '<div class="caption-toggle">'
+              +     '<div>'
+              +       '<input type="radio" name="' + capName + '" id="on-' + capName + '">'
+              +       '<label for="on-' + capName + '">ON</label>'
+              +     '</div>'
+              +     '<div>'
+              +       '<input type="radio" name="' + capName + '" id="off-' + capName + '">'
+              +       '<label for="off-' + capName + '">OFF</label>'
+              +     '</div>'
+              +   '</div>'
+              +   '<button type="button" class="button">Settings</button>'
+              + '</div>');
+    $player.controls.captionsMenu = $player.captions.find('.captions-menu');
+  }
 
+  setupTime($player);
+
+  /////////////
+  // actions //
+  /////////////
+  $player.play = function () {
+    // play the video...
+    $player.self[0].play();
+    // show the pause-icon
+    $player.controls.playPause
+      .find('i')
+      .removeClass('fa-play')
+      .addClass('fa-pause');
+
+    // TODO: check if caps are on
+    // and start them up here...
+  };
+
+  $player.pause = function () {
+    // pause the video...
+    $player.self[0].pause();
+    // show the play-icon
+    $player.controls.playPause
+      .find('i')
+      .removeClass('fa-pause')
+      .addClass('fa-play');
+
+    // TODO: check if caps are
+    // on and kill them here.
+  }
+
+
+  ////////////
+  // events //
+  ////////////
+  $player.controls.playPause
+    .find('button')
+    .on('click', function () {
+      if (!isPlaying(this)) {
+        $player.play();
+      } else {
+        $player.pause();
+      }
+    });
+
+  $player.self.on('loadedmetadata', function (e) {
+    console.log('loaded: ', e);
+  })
 };
+
 
 /**
  * @param  {Object} opts User's options
@@ -92,18 +165,45 @@ $.fn.a11yze = function (opts) {
   var options = $.extend(defaults, opts);
 
   $(this).each(function () {
-    return new A11yze(this, options);
+    return init(this, options);
   });
 
   return this;
 };
 
 
-var rndid = function () {
-    function s4() {
-      return Math.floor((1 + Math.random()) * 0x10000)
-        .toString(16)
-        .substring(1);
-    }
-    return 'a11yze-' + s4() + '-' + s4() + '-' + s4();
-  };
+
+///////////
+// UTILS //
+///////////
+
+function setupTime($player) {
+  // current time:
+  $player.controls.time
+    .find('.current-time')
+    .html('0:00');
+
+  $player.controls.time
+    .find('.total-time')
+    .html(Math.round($player.self[0].duration))
+}
+
+/**
+ * Determines if video is playing based on the
+ * presence of the pause class on the button
+ */
+function isPlaying(playPauseBtn) {
+  return $(playPauseBtn).find('i').hasClass('fa-pause');
+}
+
+/**
+ * Returns a random string
+ */
+function rndid() {
+  function s4() {
+    return Math.floor((1 + Math.random()) * 0x10000)
+      .toString(16)
+      .substring(1);
+  }
+  return 'a11yze-' + s4() + '-' + s4() + '-' + s4();
+};
